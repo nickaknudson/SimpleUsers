@@ -1,0 +1,20 @@
+{
+  "name": "repox/simpleusers",
+  "type": "library",
+  "description": "A simple user management script written in PHP/MySQL which allows you to easily add login protected areas of you website.",
+  "homepage": "https://github.com/Repox/SimpleUsers",
+  "authors": [
+    {
+      "name": "repox",
+      "email": "storm@catalystcode.net"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "simpleusers": "."
+    },
+  },
+  "require": {
+    "php": ">=5.3.0"
+  }
+}

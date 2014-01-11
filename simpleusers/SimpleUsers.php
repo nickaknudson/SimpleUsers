@@ -1,9 +1,6 @@
 <?php
 
-	/**
-	 * This file is part of SimpleUsers.
-	 *
-	 */
+namespace simpleusers;
 
 	/**
 	* SimpleUsers is a small-scale and flexible way of adding
@@ -25,13 +22,13 @@
 		* @exception	Exception	If a session id can't be returned.
 		*/
 
-		public function __construct()
+		public function __construct($config)
 		{
 			$sessionId = session_id();
 			if( strlen($sessionId) == 0)
 				throw new Exception("No session has been started.\n<br />Please add `session_start();` initially in your file before any output.");
 
-			$this->mysqli = new mysqli($GLOBALS["mysql_hostname"], $GLOBALS["mysql_username"], $GLOBALS["mysql_password"], $GLOBALS["mysql_database"]);
+			$this->mysqli = new mysqli($config->mysql_hostname, $config->mysql_username, $config->mysql_password, $config->mysql_database);
 			if( $this->mysqli->connect_error )
 				throw new Exception("MySQL connection could not be established: ".$this->mysqli->connect_error);
 
