@@ -28,7 +28,7 @@ namespace simpleusers;
 			if( strlen($sessionId) == 0)
 				throw new \Exception("No session has been started.\n<br />Please add `session_start();` initially in your file before any output.");
 
-			$this->mysqli = new mysqli($config->mysql_hostname, $config->mysql_username, $config->mysql_password, $config->mysql_database);
+			$this->mysqli = new \mysqli($config->mysql_hostname, $config->mysql_username, $config->mysql_password, $config->mysql_database);
 			if( $this->mysqli->connect_error )
 				throw new \Exception("MySQL connection could not be established: ".$this->mysqli->connect_error);
 
