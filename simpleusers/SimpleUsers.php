@@ -26,11 +26,11 @@ namespace simpleusers;
 		{
 			$sessionId = session_id();
 			if( strlen($sessionId) == 0)
-				throw new Exception("No session has been started.\n<br />Please add `session_start();` initially in your file before any output.");
+				throw new \Exception("No session has been started.\n<br />Please add `session_start();` initially in your file before any output.");
 
 			$this->mysqli = new mysqli($config->mysql_hostname, $config->mysql_username, $config->mysql_password, $config->mysql_database);
 			if( $this->mysqli->connect_error )
-				throw new Exception("MySQL connection could not be established: ".$this->mysqli->connect_error);
+				throw new \Exception("MySQL connection could not be established: ".$this->mysqli->connect_error);
 
 			$this->_validateUser();
 			$this->_populateUserdata();
@@ -53,7 +53,7 @@ namespace simpleusers;
 
 			$sql = "INSERT INTO users VALUES (NULL, ?, SHA1(?), ?, NOW(), NOW())";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("sss", $username, $password, $salt);
 			if( $this->stmt->execute() )
@@ -77,7 +77,7 @@ namespace simpleusers;
 		{
 			$sql = "SELECT userId FROM users WHERE uUsername=? AND SHA1(CONCAT(uSalt, ?))=uPassword LIMIT 1";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("ss", $username, $password);
 			$this->stmt->execute();
@@ -115,7 +115,7 @@ namespace simpleusers;
 
 				$reservedKeys = array("userId", "uUsername", "uActivity", "uCreated", "uLevel");
 				if( in_array($key, $reservedKeys) )
-					throw new Exception("User information key \"".$key."\" is reserved for internal use!");
+					throw new \Exception("User information key \"".$key."\" is reserved for internal use!");
 
 			if( $userId == null )
 				$userId = $_SESSION[$this->sessionName]["userId"];
@@ -124,7 +124,7 @@ namespace simpleusers;
 			{
 				$sql = "UPDATE users_information SET infoValue=? WHERE infoKey=? AND userId=? LIMIT 1";
 				if( !$this->stmt = $this->mysqli->prepare($sql) )
-					throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+					throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 				$this->stmt->bind_param("ssi", $value, $key, $userId);
 				$this->stmt->execute();
@@ -133,7 +133,7 @@ namespace simpleusers;
 			{
 				$sql = "INSERT INTO users_information VALUES (?, ?, ?)";
 				if( !$this->stmt = $this->mysqli->prepare($sql) )
-					throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+					throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 				$this->stmt->bind_param("iss", $userId, $key, $value);
 				$this->stmt->execute();
@@ -164,7 +164,7 @@ namespace simpleusers;
 
 			$sql = "SELECT infoValue FROM users_information WHERE userId=? AND infoKey=? LIMIT 1";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("is", $userId, $key);
 			$this->stmt->execute();
@@ -202,7 +202,7 @@ namespace simpleusers;
 
 			$sql = "DELETE FROM users_information WHERE userId=? AND infoKey=? LIMIT 1";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("is", $userId, $key);
 			$this->stmt->execute();
@@ -229,7 +229,7 @@ namespace simpleusers;
 
 			$sql = "SELECT infoKey, infoValue FROM users_information WHERE userId=? ORDER BY infoKey ASC";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("i", $userId);
 			$this->stmt->execute();
@@ -282,7 +282,7 @@ namespace simpleusers;
 
 			$sql = "UPDATE users SET uPassword=SHA1(?), uSalt=? WHERE userId=? LIMIT 1";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("ssi", $password, $salt, $userId);
 			return $this->stmt->execute();
@@ -300,7 +300,7 @@ namespace simpleusers;
 			$sql = "SELECT DISTINCT userId, uUsername, uActivity, uCreated FROM users ORDER BY uUsername ASC";
 
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->execute();
 			$this->stmt->store_result();
@@ -342,7 +342,7 @@ namespace simpleusers;
 
 			$sql = "SELECT userId, uUsername, uActivity, uCreated FROM users WHERE userId=? LIMIT 1";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("i", $userId);
 			$this->stmt->execute();
@@ -374,14 +374,14 @@ namespace simpleusers;
 		{
 			$sql = "DELETE FROM users WHERE userId=?";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("i", $userId);
 			$this->stmt->execute();
 
 			$sql = "DELETE FROM users_information WHERE userId=?";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("i", $userId);
 			$this->stmt->execute();
@@ -449,7 +449,7 @@ namespace simpleusers;
 
 			$sql = "UPDATE users SET uActivity=NOW() WHERE userId=? LIMIT 1";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("i", $userId);
 			$this->stmt->execute();
@@ -484,7 +484,7 @@ namespace simpleusers;
 
 			$sql = "SELECT userId FROM users WHERE userId=? LIMIT 1";
 			if( !$this->stmt = $this->mysqli->prepare($sql) )
-				throw new Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
+				throw new \Exception("MySQL Prepare statement failed: ".$this->mysqli->error);
 
 			$this->stmt->bind_param("i", $userId);
 			$this->stmt->execute();
