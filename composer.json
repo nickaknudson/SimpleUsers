@@ -12,7 +12,7 @@
   "autoload": {
     "psr-0": {
       "simpleusers": "."
-    },
+    }
   },
   "require": {
     "php": ">=5.3.0"
